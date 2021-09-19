@@ -12,7 +12,7 @@ We will discuss `editcpp` as it is the objective tool.
 
 **`editcpp` doesn't work with templates.**
 
-##The idea of `editcpp` tool
+##The idea behind `editcpp` tool
 `editcpp` tool uses `libclang` to find function/method definitions.
 `libclang` parses each `dest.cpp` and `src.cpp` and everything that is
 included by `#include` preprocessor directives. Then `editcpp` tool
