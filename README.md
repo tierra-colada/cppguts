@@ -13,7 +13,7 @@ We will discuss `editcpp` as it is the objective tool.
 **`editcpp` doesn't work with templates.**
 
 ## The idea behind `editcpp` tool
-`editcpp` tool uses `libclang` to find function/method definitions.
+`editcpp` tool uses `libclang` to find function/method definition.
 `libclang` parses each `dest.cpp` and `src.cpp` and everything that is
 included by `#include` preprocessor directives. Then `editcpp` tool
 selects all functions and methods defined in `dest.cpp` and `src.cpp` 
@@ -40,7 +40,7 @@ these types must be preliminary declared (not necessary to define them).
 it will simply copy selected text lines from one file to another.** 
 
 ## Example
-original function/method definitions file **dest.h**:
+original function/method definition file **dest.h**:
  ```cpp
 #include <iostream>
 
@@ -94,7 +94,7 @@ namespace ns {
 }
 ```
 
-new function/method definitions file **src.h**:
+new function/method definition file **src.h**:
 ```cpp
 class SrcPrivate;   // declare helper type
 
