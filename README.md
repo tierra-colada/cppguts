@@ -34,7 +34,7 @@ while deleting old funcion/method definition.
 * _do they both have the same semantic parent (classname)? (for methods only)_
 
 If your new function/method definition uses external types then
-these types must be declared (not necessary to define them). 
+these types must be preliminary declared (not necessary to define them). 
 
 **Remember that after `editcpp` finds common functions/methods
 it will simply copy selected text lines from one file to another.** 
