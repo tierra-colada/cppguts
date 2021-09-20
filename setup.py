@@ -17,7 +17,7 @@ setuptools.setup(
                 'automatically find and copy/paste new function definition',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    download_url='https://github.com/tierra-colada/cppguts/archive/refs/tags/v0.1.1.tar.gz',
+    download_url='https://github.com/tierra-colada/cppguts/archive/refs/tags/v1.0.0.tar.gz',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
