@@ -6,12 +6,12 @@ import unittest
 
 class test_basics(unittest.TestCase):
     this_dir = os.path.dirname(__file__)
-    data_dir = this_dir + '/data'
-    tmp_dir = data_dir + '/tmp'
-    src = tmp_dir + '/src.h'
-    dest = tmp_dir + '/dest.h'
-    srcin = data_dir + '/src.h.in'
-    destin = data_dir + '/dest.h.in'
+    data_dir = this_dir + '\\data'
+    tmp_dir = this_dir + '\\tmp'
+    src = tmp_dir + '\\src.h'
+    dest = tmp_dir + '\\dest.h'
+    srcin = data_dir + '\\src.h.in'
+    destin = data_dir + '\\dest.h.in'
 
     def setUp(self):
         shutil.rmtree(self.tmp_dir, ignore_errors=True)
@@ -19,8 +19,8 @@ class test_basics(unittest.TestCase):
         shutil.copy(self.srcin, self.src)
         shutil.copy(self.destin, self.dest)
 
-    # def tearDown(self):
-    #     shutil.rmtree(self.tmp_dir, ignore_errors=True)
+    def tearDown(self):
+        shutil.rmtree(self.tmp_dir, ignore_errors=True)
 
     def test_basics(self):
         subprocess.run(['editcpp', '--src-file', self.src, '--dest-file', self.dest, '--oldfile-keep', '-std=c++03'])

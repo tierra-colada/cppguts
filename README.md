@@ -131,12 +131,12 @@ Run:
 
 `editcpp --src-file=src.h --dest-file=dest.h --oldfile-keep -std=c++03`
 
-Another option is to run test:
-
-`python -m unittest cppguts.tests.test_cppguts`
-
 The `-std=c++03` tells the clang to parse the files as C++. Also you may need to use any other clang flags like `-I` to include directories that are required by the files.
 
 `--oldfile-keep` is used to keep the original file (it will be renamed 
 by adding `_OLD_N` suffix). Otherwise use `--oldfile-delete` to delete the 
 original file.
+
+Another option is to run the test:
+
+`python -m unittest cppguts.tests.test_cppguts`
