@@ -7,16 +7,14 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name='cppguts',
-    version='0.1.1',
+    version='1.0.0',
     packages=setuptools.find_packages(),
     url='https://github.com/tierra-colada/cppguts',
     license='MIT',
     author='kerim khemrev',
     author_email='tierracolada@gmail.com',
-    description='If your C/C++ project depends on some external C/C++ projects and ' 
-                'you want to make some changes in external functions/methods ' 
-                'and you would like to copy/paste these changes automatically '
-                'then this package may help you. ',
+    description='Tool aimed at C/C++ source code correction that allows to '
+                'automatically find and copy/paste new function definition',
     long_description=long_description,
     long_description_content_type='text/markdown',
     download_url='https://github.com/tierra-colada/cppguts/archive/refs/tags/v0.1.1.tar.gz',

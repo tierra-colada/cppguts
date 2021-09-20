@@ -1,8 +1,7 @@
 # cppguts
-If your C/C++ project depends on some external C/C++ projects and 
+If your project depends on some external C/C++ projects and 
 you want to make some changes in external functions/methods 
-and you would like to copy/paste these changes automatically 
-then this package may help you. 
+and then copy/paste these changes automatically - this package may help you. 
 
 There are two tools:
 1) `editcpp` used to edit source code;
@@ -13,31 +12,32 @@ We will discuss `editcpp` as it is the objective tool.
 **`editcpp` doesn't work with templates.**
 
 ## The idea behind `editcpp` tool
-`editcpp` uses `libclang` to find function/method definition start/end lines in text file (.c, .h, .hpp, .cpp or whatever extension you use for your C/C++ project).
-`libclang` parses each `dest.cpp` and `src.cpp` and everything that is
+`editcpp` uses `libclang` to find function/method definition start/end lines in text file (`.c`, `.h`, `.hpp`, `.cpp` or whatever C/C++ extension). `libclang` parses each `dest.cpp` and `src.cpp` and everything that is
 included by `#include` preprocessor directives. Then `editcpp` tool
 selects all functions and methods defined in `dest.cpp` and `src.cpp` 
-(it skips any function/method defined in other file) and 
-tries to find matching functions/methods. After that `editcpp` copies 
-function/method definition from `src.cpp` and paste it to the `dest.cpp` 
-while deleting old funcion/method definition.
+(it assumes that you know where old and new function/method definition resides) and tries to find matching functions/methods. After that `editcpp` copies function/method definition from `src.cpp` and pastes it to the `dest.cpp` while deleting old funcion/method definition.
 
 <ins>To find common function `editcpp` checks:</ins>
-* _are they both definitions?_
-* _are they both const?_
-* _are they both static?_
-* _are they both vitual?_
-* _are they both functions?_
-* _are they both methods?_
-* _do they both have the same name?_
-* _do they both have the same return type and arg types?_
-* _do they both have the same semantic parent (classname)? (for methods only)_
+* are they both _definitions?_
+* are they both _const?_
+* are they both _static?_
+* are they both _vitual?_
+* are they both _functions?_
+* are they both _methods?_
+* do they both have the same name?
+* do they both have the same return type and arg types?
+* do they both have the same semantic parent (classname)? (for methods only)
 
-If your new function/method definition uses external types then
-these types must be preliminary declared (not necessary to define them). 
+## Notes
 
-**Remember that after `editcpp` finds common functions/methods
-it will simply copy selected text lines from one file to another.** 
+* you are free to pass any clang argument after `editcpp` otions but don't pass file without flag to clang (as we usually do when using clang)
+* if you parse files that includes non standard headers then you probably need to pass `-I<include_dir>` flag to clang to include directories;
+* if you parse `C++` files then it may be necessary to pass `-std=c++03` (or higher) flag to inform clang that the file is `C++`;
+* if your new function/method definition uses external types then
+these types must be preliminary declared (not necessary to define them);
+
+Remember that after `editcpp` finds common functions/methods
+it will simply copy selected text lines from one file to another
 
 ## Example
 original function/method definition file **dest.h**:
@@ -133,10 +133,8 @@ Run:
 
 The `-std=c++03` tells the clang to parse the files as C++. Also you may need to use any other clang flags like `-I` to include directories that are required by the files.
 
-`--oldfile-keep` is used to keep the original file (it will be renamed 
-by adding `_OLD_N` suffix). Otherwise use `--oldfile-delete` to delete the 
-original file.
+`--oldfile-keep` (default) is used to keep the original file (it will be renamed by adding `_OLD_N` suffix). Otherwise use `--oldfile-delete` to delete the original file.
 
-Another option is to run the test:
+Another option is to run the test (though the test deletes all the generated files so you better take a look in `/tests` dir):
 
 `python -m unittest cppguts.tests.test_cppguts`
