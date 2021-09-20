@@ -1,34 +1,30 @@
-import unittest, pathlib
+from pathlib import Path
+import shutil
+import subprocess, os, filecmp
+import unittest
 
 
 class test_basics(unittest.TestCase):
+    this_dir = os.path.dirname(__file__)
+    data_dir = this_dir + '/data'
+    tmp_dir = data_dir + '/tmp'
+    src = tmp_dir + '/src.h'
+    dest = tmp_dir + '/dest.h'
+    srcin = data_dir + '/src.h.in'
+    destin = data_dir + '/dest.h.in'
+
     def setUp(self):
-        self.srcin = 'data/src.h.in'
-        self.destin = 'data/dest.h.in'
-        self.src = 'data/tmp/src.h'
-        self.dest = 'data/tmp/dest.h'
+        shutil.rmtree(self.tmp_dir, ignore_errors=True)
+        Path(self.tmp_dir).mkdir(parents=True, exist_ok=True)
+        shutil.copy(self.srcin, self.src)
+        shutil.copy(self.destin, self.dest)
 
-    def tearDown(self):
-        h5File = self.seisContainer.getH5File()
+    # def tearDown(self):
+    #     shutil.rmtree(self.tmp_dir, ignore_errors=True)
 
-    seisContainer = None
-    p = h5geo.SeisParam()
-    FILE_NAME = None
-    SEIS_NAME1 = None
-    SEIS_NAME2 = None
+    def test_basics(self):
+        subprocess.run(['editcpp', '--src-file', self.src, '--dest-file', self.dest, '--oldfile-keep', '-std=c++03'])
 
-    def test_createContainer(self):
-        self.assertTrue(os.path.isfile(self.FILE_NAME))
-
-    def test_createSeisWithDifferentCreateFlags(self):
-        seis = self.seisContainer.createSeis(self.SEIS_NAME1, self.p, h5geo.CreationType.OPEN_OR_CREATE)
-        self.assertFalse(seis is None)
-
-        seis = self.seisContainer.createSeis(self.SEIS_NAME1, self.p, h5geo.CreationType.CREATE_OR_OVERWRITE)
-        self.assertFalse(seis is None)
-
-        seis = self.seisContainer.createSeis(self.SEIS_NAME1, self.p, h5geo.CreationType.CREATE_UNDER_NEW_NAME)
-        self.assertFalse(seis is None)
-
-        seis = self.seisContainer.createSeis(self.SEIS_NAME1, self.p, h5geo.CreationType.OPEN_OR_CREATE)
-        self.assertFalse(seis is None)
+        with open(self.dest) as f:
+            with open(self.destin) as fin:
+                self.assertTrue(f != fin)

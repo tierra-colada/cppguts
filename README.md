@@ -1,5 +1,5 @@
 # cppguts
-If your C/C++ project depends on external C/C++ projects and 
+If your C/C++ project depends on some external C/C++ projects and 
 you want to make some changes in external functions/methods 
 and you would like to copy/paste these changes automatically 
 then this package may help you. 
@@ -13,7 +13,7 @@ We will discuss `editcpp` as it is the objective tool.
 **`editcpp` doesn't work with templates.**
 
 ## The idea behind `editcpp` tool
-`editcpp` tool uses `libclang` to find function/method definition.
+`editcpp` uses `libclang` to find function/method definition start/end lines in text file (.c, .h, .hpp, .cpp or whatever extension you use for your C/C++ project).
 `libclang` parses each `dest.cpp` and `src.cpp` and everything that is
 included by `#include` preprocessor directives. Then `editcpp` tool
 selects all functions and methods defined in `dest.cpp` and `src.cpp` 
@@ -127,10 +127,15 @@ namespace ns {
   }
 }
 ```
-Run: `editcpp --source-file=src.h --dest-file=dest.h --oldfile-keep -std=c++17`
+Run: 
 
-The `-std=c++17` is simply for illustration but you can pass any clang flag
-for example `-I` to include directories that are required by the files.
+`editcpp --src-file=src.h --dest-file=dest.h --oldfile-keep -std=c++03`
+
+Another option is to run test:
+
+`python -m unittest cppguts.tests.test_cppguts`
+
+The `-std=c++03` tells the clang to parse the files as C++. Also you may need to use any other clang flags like `-I` to include directories that are required by the files.
 
 `--oldfile-keep` is used to keep the original file (it will be renamed 
 by adding `_OLD_N` suffix). Otherwise use `--oldfile-delete` to delete the 

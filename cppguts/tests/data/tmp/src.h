@@ -17,7 +17,7 @@ void Src::substract(SrcPrivate p, int v){
   p.substract(v) - 10;
 }
 
-// NEW simple function definition 
+// NEW simple function definition
 void foo(int &v){
   v -= 10;
 }

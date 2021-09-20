@@ -174,13 +174,13 @@ def compare_method_argument_types(node_1: Cursor, node_2: Cursor) -> bool:
 
 def main():
     parser = argparse.ArgumentParser(description=
-                                     'Replace C++ function/method definitions in destination file '
+                                     'Replace C++ function/method definition in destination file '
                                      '(but doesn`t work with templates). '
-                                     'One source file may contain several function/method definitions. '
+                                     'One source file may contain several functions/methods to replace. '
                                      'After passing `editcpp` flags you are allowed to pass clang '
                                      'commands like `-I` (to include dir), `-std=c++17` and other. '
                                      'Dont pass a file without flag to clang! Use `--dest-file=` instead.')
-    parser.add_argument('--source-file', dest='srcfile', action='store',
+    parser.add_argument('--src-file', dest='srcfile', action='store',
                         type=type('string'), required=True, default=None,
                         help='file with new functions definitions')
     parser.add_argument('--dest-file', dest='destfile', action='store',
@@ -218,12 +218,14 @@ def main():
     method_def_nodes_src = []
     find_method_def_nodes(tu_src.cursor, method_def_nodes_src, args.srcfile)
     if not method_def_nodes_src:
-        parser.error("unable to find any method definition in source file:\t" + args.srcfile)
+        parser.error("unable to find any method definition in source file:\n" +
+                     args.srcfile + "\nprobably you forgot to pass `-std=c++03` (or higher) flag?")
 
     method_def_nodes_dest = []
     find_method_def_nodes(tu_dest.cursor, method_def_nodes_dest, args.destfile)
     if not method_def_nodes_dest:
-        parser.error("unable to find any function/method definition in destination file:\t" + args.destfile)
+        parser.error("unable to find any function/method definition in destination file:\n" +
+                     args.destfile + "\nprobably you forgot to pass `-std=c++11` (or higher) flag?")
 
     # read source file
     with open(args.srcfile, mode='r') as file:
