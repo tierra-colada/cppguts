@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: 3.6
       - name: Run tests with pytest
-        run: python unittest cppguts.tests.test_cppguts
+        run: python -m unittest cppguts.tests.test_cppguts
 
 #      # Runs a single command using the runners shell
 #      - name: Run a one-line script
