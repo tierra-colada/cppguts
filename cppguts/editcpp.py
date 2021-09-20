@@ -58,7 +58,7 @@ def prepare_filename(destfile: str) -> str:
     filenames = [f for f in listdir(destdir) if isfile(join(destdir, f))]
     filename = os.path.basename(destfile)
     uniquename = generate_unique_filename(filenames, filename)
-    prepared_filename = destdir + '\\' + uniquename
+    prepared_filename = os.path.join(destdir, uniquename)
     return prepared_filename
 
 
@@ -73,7 +73,7 @@ def copy_file(srcfile: str, destfile: str) -> str:
     filenames = [f for f in listdir(destdir) if isfile(join(destdir, f))]
     filename = os.path.basename(destfile)
     uniquename = generate_unique_filename(filenames, filename)
-    copiedfile = destdir + '\\' + uniquename
+    copiedfile = os.path.join(destdir, uniquename)
     shutil.copy(srcfile, copiedfile)
     return copiedfile
 

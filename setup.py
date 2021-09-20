@@ -39,6 +39,7 @@ setuptools.setup(
     },
     python_requires='>=3',
     install_requires=[
+        'wheel',
         'libclang',
     ],
     include_package_data=True   # important to copy MANIFEST.in files

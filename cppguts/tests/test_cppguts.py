@@ -6,12 +6,12 @@ import unittest
 
 class test_basics(unittest.TestCase):
     this_dir = os.path.dirname(__file__)
-    data_dir = this_dir + '\\data'
-    tmp_dir = this_dir + '\\tmp'
-    src = tmp_dir + '\\src.h'
-    dest = tmp_dir + '\\dest.h'
-    srcin = data_dir + '\\src.h.in'
-    destin = data_dir + '\\dest.h.in'
+    data_dir = os.path.join(this_dir, 'data')
+    tmp_dir = os.path.join(this_dir, 'tmp')
+    src = os.path.join(tmp_dir, 'src.h')
+    dest = os.path.join(tmp_dir, 'dest.h')
+    srcin = os.path.join(data_dir, 'src.h.in')
+    destin = os.path.join(data_dir, 'dest.h.in')
 
     def setUp(self):
         shutil.rmtree(self.tmp_dir, ignore_errors=True)
