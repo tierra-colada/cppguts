@@ -194,12 +194,12 @@ def main():
     args, clangcmd = parser.parse_known_args()
 
     if not os.path.isfile(args.srcfile):
-        parser.error("specified source file doesn't exist:\n" +
-                     args.srcfile)
+        parser.error(f"specified source file doesn't exist:\n" +
+                       args.srcfile)
 
     if not os.path.isfile(args.destfile):
-        parser.error("specified destination file doesn't exist:\n" +
-                     args.destfile)
+        parser.error(f"specified destination file doesn't exist:\n" +
+                       args.destfile)
 
     clangcmd_src = clangcmd.copy()
     clangcmd_dest = clangcmd.copy()
@@ -209,23 +209,23 @@ def main():
     index = Index.create()
     tu_src = index.parse(None, clangcmd_src)
     if not tu_src:
-        parser.error("clang unable to load source file")
+        parser.error("clang unable to load source file:\n{args.srcfile}")
 
     tu_dest = index.parse(None, clangcmd_dest)
     if not tu_dest:
-        parser.error("clang unable to load destination file")
+        parser.error("clang unable to load destination file:\n{args.destfile}")
 
     method_def_nodes_src = []
     find_method_def_nodes(tu_src.cursor, method_def_nodes_src, args.srcfile)
     if not method_def_nodes_src:
-        parser.error("unable to find any method definition in source file:\n" +
-                     args.srcfile + "\nprobably you forgot to pass `-std=c++03` (or higher) flag?")
+        parser.error(f"unable to find any method definition in source file:\n{args.srcfile}\n" +
+                      "probably you forgot to pass `-std=c++03` (or higher) flag?")
 
     method_def_nodes_dest = []
     find_method_def_nodes(tu_dest.cursor, method_def_nodes_dest, args.destfile)
     if not method_def_nodes_dest:
-        parser.error("unable to find any function/method definition in destination file:\n" +
-                     args.destfile + "\nprobably you forgot to pass `-std=c++11` (or higher) flag?")
+        parser.error(f"unable to find any function/method definition in destination file:\n{args.destfile}" +
+                      "\nprobably you forgot to pass `-std=c++3` (or higher) flag?")
 
     # read source file
     with open(args.srcfile, mode='r') as file:
@@ -241,12 +241,12 @@ def main():
     for node_src in method_def_nodes_src:
         node_dest = find_method_matching_node(node_src, method_def_nodes_dest)
         if not node_dest:
-            err_msg = ("unable to find any destination function/method matching for a source function/method:\n" +
-                       "\t" + node_src.semantic_parent.displayname + "::" + node_src.spelling + "->" + node_src.type.spelling + "\n" +
+            err_msg = (f"unable to find any destination function/method matching for a source function/method:\n" +
+                        "\t{node_src.semantic_parent.displayname}::{node_src.spelling}->{node_src.type.spelling}\n" +
                        "found destination functions/methods:\n")
             for node in method_def_nodes_dest:
-                err_msg += "\t" + node.semantic_parent.displayname + "::" + node.spelling + "->" + node.type.spelling + "\n"
-            err_msg += "also check is it definition? static? virtual? const?"
+                err_msg += "\t{node.semantic_parent.displayname}::{node.spelling}->{node.type.spelling}\n"
+            err_msg += f"also check is it definition? static? virtual? const?"
             parser.error(err_msg)
 
         idx = dest_lines.index(node_dest.extent.start.line)

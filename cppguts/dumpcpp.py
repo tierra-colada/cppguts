@@ -112,8 +112,7 @@ def main():
     args, clangcmd = parser.parse_known_args()
 
     if not os.path.isfile(args.file):
-        parser.error("specified file doesn't exist:\n" +
-                     args.file)
+        parser.error(f"specified file doesn't exist:\n{args.file}")
 
     clangcmd.append(args.file)
 

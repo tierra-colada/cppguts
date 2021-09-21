@@ -2,6 +2,7 @@ from pathlib import Path
 import shutil
 import subprocess, os, filecmp
 import unittest
+import sys
 
 
 class test_basics(unittest.TestCase):
@@ -23,7 +24,11 @@ class test_basics(unittest.TestCase):
         shutil.rmtree(self.tmp_dir, ignore_errors=True)
 
     def test_basics(self):
-        subprocess.run(['editcpp', '--src-file', self.src, '--dest-file', self.dest, '--oldfile-keep', '-std=c++03'])
+        os.environ["PATH"] += os.pathsep + os.path.dirname(sys.executable)
+        guts_env = os.environ.copy()
+        guts_env["PATH"] += os.pathsep + os.path.dirname(sys.executable)
+        subprocess.run(['editcpp', '--src-file', self.src, '--dest-file', self.dest, 
+        '--oldfile-keep', '-std=c++03'], env=guts_env)
 
         with open(self.dest) as f:
             with open(self.destin) as fin:
