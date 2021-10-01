@@ -1,10 +1,20 @@
 import os, shutil, argparse, warnings
 from os import listdir
 from os.path import isfile, join
+from pprint import pprint
 
 from clang.cindex import Index
 from clang.cindex import Cursor
 from clang.cindex import CursorKind
+
+
+def get_diag_info(diag):
+    return {'severity': diag.severity,
+            'location': diag.location,
+            'category_name': diag.category_name,
+            'spelling': diag.spelling,
+            'ranges': diag.ranges,
+            'fixits': diag.fixits}
 
 
 def find_include_directives(txtdata: list) -> (list, list):
@@ -81,16 +91,19 @@ def copy_file(srcfile: str, destfile: str) -> str:
 def find_method_def_nodes(node: Cursor, nodes_found: list, location_filename=str()):
     try:
         if location_filename:
-            if (node.kind == CursorKind.CXX_METHOD or node.kind == CursorKind.FUNCTION_DECL and
-                    node.is_definition() and
+            if (node.kind == CursorKind.CXX_METHOD and node.is_definition() and
                     os.path.samefile(node.location.file.name, location_filename)):
+                nodes_found.append(node)
+            elif (node.kind == CursorKind.FUNCTION_DECL and node.is_definition() and
+                  os.path.samefile(node.location.file.name, location_filename)):
                 nodes_found.append(node)
             else:
                 for child in node.get_children():
                     find_method_def_nodes(child, nodes_found, location_filename)
         else:
-            if (node.kind == CursorKind.CXX_METHOD or node.kind == CursorKind.FUNCTION_DECL and
-                    node.is_definition()):
+            if node.kind == CursorKind.CXX_METHOD and node.is_definition():
+                nodes_found.append(node)
+            elif node.kind == CursorKind.FUNCTION_DECL and node.is_definition():
                 nodes_found.append(node)
             else:
                 for child in node.get_children():
@@ -215,17 +228,21 @@ def main():
     if not tu_dest:
         parser.error("clang unable to load destination file:\n{args.destfile}")
 
+    # print information about unknown files/functions/methods
+    pprint(('diagnostics in SOURCE:', [get_diag_info(d) for d in tu_src.diagnostics]))
+    pprint(('diagnostics in DESTINATION:', [get_diag_info(d) for d in tu_dest.diagnostics]))
+
     method_def_nodes_src = []
     find_method_def_nodes(tu_src.cursor, method_def_nodes_src, args.srcfile)
     if not method_def_nodes_src:
         parser.error(f"unable to find any method definition in source file:\n{args.srcfile}\n" +
-                      "probably you forgot to pass `-std=c++03` (or higher) flag?")
+                      f"probably you forgot to pass `-std=c++03` (or higher) flag?")
 
     method_def_nodes_dest = []
     find_method_def_nodes(tu_dest.cursor, method_def_nodes_dest, args.destfile)
     if not method_def_nodes_dest:
         parser.error(f"unable to find any function/method definition in destination file:\n{args.destfile}" +
-                      "\nprobably you forgot to pass `-std=c++3` (or higher) flag?")
+                      f"\nprobably you forgot to pass `-std=c++3` (or higher) flag?")
 
     # read source file
     with open(args.srcfile, mode='r') as file:
@@ -242,10 +259,10 @@ def main():
         node_dest = find_method_matching_node(node_src, method_def_nodes_dest)
         if not node_dest:
             err_msg = (f"unable to find any destination function/method matching for a source function/method:\n" +
-                        "\t{node_src.semantic_parent.displayname}::{node_src.spelling}->{node_src.type.spelling}\n" +
-                       "found destination functions/methods:\n")
+                        f"\t{node_src.semantic_parent.displayname}::{node_src.spelling}->{node_src.type.spelling}\n" +
+                        f"found destination functions/methods:\n")
             for node in method_def_nodes_dest:
-                err_msg += "\t{node.semantic_parent.displayname}::{node.spelling}->{node.type.spelling}\n"
+                err_msg += f"\t{node.semantic_parent.displayname}::{node.spelling}->{node.type.spelling}\n"
             err_msg += f"also check is it definition? static? virtual? const?"
             parser.error(err_msg)
 

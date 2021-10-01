@@ -7,6 +7,7 @@ import argparse, os
 def get_diag_info(diag):
     return {'severity': diag.severity,
             'location': diag.location,
+            'category_name': diag.category_name,
             'spelling': diag.spelling,
             'ranges': diag.ranges,
             'fixits': diag.fixits}
@@ -59,10 +60,10 @@ def get_node_info(node: Cursor, children = None) -> dict:
             'lexical_parent.displayname': node.lexical_parent.displayname if node.lexical_parent else None,
             'linkage': node.linkage,
             'location': node.location,
-            'mangled_name': node.mangled_name,
-            'objc_type_encoding': node.objc_type_encoding,
-            'raw_comment': node.raw_comment,
-            'referenced': node.referenced,
+            # 'mangled_name': node.mangled_name if node.mangled_name else None,
+            # 'objc_type_encoding': node.objc_type_encoding,
+            # 'raw_comment': node.raw_comment,
+            # 'referenced': node.referenced,
             'result_type spelling': node.result_type.spelling,
             'semantic_parent.displayname': node.semantic_parent.displayname if node.semantic_parent else None,
             'spelling': node.spelling,
@@ -71,8 +72,8 @@ def get_node_info(node: Cursor, children = None) -> dict:
             'translation_unit spelling': node.translation_unit.spelling if node.translation_unit else None,
             'type spelling': node.type.spelling,
             # 'underlying_typedef_type spelling': node.underlying_typedef_type.spelling if node.underlying_typedef_type else None,
-            'walk_preorder': node.walk_preorder,
-            'xdata': node.xdata,
+            # 'walk_preorder': node.walk_preorder,
+            # 'xdata': node.xdata,
             'children' : children}
 
 
@@ -121,7 +122,7 @@ def main():
     if not tu:
         parser.error("unable to load input")
 
-    pprint(('diags', [get_diag_info(d) for d in tu.diagnostics]))
+    pprint(('diagnostics:', [get_diag_info(d) for d in tu.diagnostics]))
     if args.objname:
         nodes_found = []
         find_nodes(tu.cursor, nodes_found, args.objname)
