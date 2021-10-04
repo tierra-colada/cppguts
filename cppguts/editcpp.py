@@ -1,11 +1,10 @@
-import os, shutil, argparse, warnings
-from os import listdir
-from os.path import isfile, join
-from pprint import pprint
+import argparse
+import os
+import shutil
+import warnings
 
-from clang.cindex import Index
-from clang.cindex import Cursor
-from clang.cindex import CursorKind
+from clang.cindex import Cursor, CursorKind, Index
+from pprint import pprint
 
 
 def get_diag_info(diag):
@@ -65,7 +64,7 @@ def prepare_filename(destfile: str) -> str:
     :return: prepared_filename - full path to the NOT yet created file
     '''
     destdir = os.path.dirname(os.path.abspath(destfile))
-    filenames = [f for f in listdir(destdir) if isfile(join(destdir, f))]
+    filenames = [f for f in os.listdir(destdir) if os.path.isfile(os.path.join(destdir, f))]
     filename = os.path.basename(destfile)
     uniquename = generate_unique_filename(filenames, filename)
     prepared_filename = os.path.join(destdir, uniquename)
@@ -80,7 +79,7 @@ def copy_file(srcfile: str, destfile: str) -> str:
     :return: copiedfile - full path to the copied file
     '''
     destdir = os.path.dirname(os.path.abspath(destfile))
-    filenames = [f for f in listdir(destdir) if isfile(join(destdir, f))]
+    filenames = [f for f in os.listdir(destdir) if os.path.isfile(os.path.join(destdir, f))]
     filename = os.path.basename(destfile)
     uniquename = generate_unique_filename(filenames, filename)
     copiedfile = os.path.join(destdir, uniquename)

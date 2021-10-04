@@ -1,7 +1,8 @@
-from clang.cindex import Index
-from clang.cindex import Cursor
+import argparse
+import os
+
+from clang.cindex import Cursor, Index
 from pprint import pprint
-import argparse, os
 
 
 def get_diag_info(diag):
