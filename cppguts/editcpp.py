@@ -206,12 +206,10 @@ def main():
     args, clangcmd = parser.parse_known_args()
 
     if not os.path.isfile(args.srcfile):
-        parser.error(f"specified source file doesn't exist:\n" +
-                       args.srcfile)
+        parser.error(f"specified source file doesn't exist:\n{args.srcfile}")
 
     if not os.path.isfile(args.destfile):
-        parser.error(f"specified destination file doesn't exist:\n" +
-                       args.destfile)
+        parser.error(f"specified destination file doesn't exist:\n{args.destfile}")
 
     clangcmd_src = clangcmd.copy()
     clangcmd_dest = clangcmd.copy()
@@ -221,11 +219,11 @@ def main():
     index = Index.create()
     tu_src = index.parse(None, clangcmd_src)
     if not tu_src:
-        parser.error("clang unable to load source file:\n{args.srcfile}")
+        parser.error(f"clang unable to load source file:\n{args.srcfile}")
 
     tu_dest = index.parse(None, clangcmd_dest)
     if not tu_dest:
-        parser.error("clang unable to load destination file:\n{args.destfile}")
+        parser.error(f"clang unable to load destination file:\n{args.destfile}")
 
     # print information about unknown files/functions/methods
     pprint(('diagnostics in SOURCE:', [get_diag_info(d) for d in tu_src.diagnostics]))
