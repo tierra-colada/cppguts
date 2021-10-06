@@ -9,6 +9,8 @@ There are two tools:
 
 We will discuss `editcpp` as it is the objective tool.
 
+Same tool aimed at editing `python` files is also available as [pythonguts](https://github.com/tierra-colada/pythonguts)
+
 **`editcpp` doesn't work with templates.**
 
 ## The idea behind `editcpp` tool
