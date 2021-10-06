@@ -113,7 +113,7 @@ def find_method_def_nodes(node: Cursor, nodes_found: list, location_filename=str
               "node spelling:\t" + node.spelling + "\n" + \
               "node display:\t" + node.displayname + "\n" + \
               "node mangled name:\t" + node.mangled_name + "\n" + \
-              "node location filename:\t" + node.location.file.name
+              "node location filename:\t" + node.location.file.name + "\n"
         warnings.warn(msg, RuntimeWarning)
         print("raised exception:\t", e)
         for child in node.get_children():
@@ -155,7 +155,7 @@ def compare_method_nodes(node_1: Cursor, node_2: Cursor) -> bool:
               "node_1 mangled name:\t" + node_1.mangled_name + "\n" + \
               "node_2 mangled name:\t" + node_2.mangled_name + "\n" + \
               "node_1 location filename:\t" + node_1.location.file.name + "\n" + \
-              "node_2 location filename:\t" + node_2.location.file.name
+              "node_2 location filename:\t" + node_2.location.file.name + "\n"
         warnings.warn(msg, RuntimeWarning)
         print("raised exception:\t", e)
 
@@ -206,10 +206,10 @@ def main():
     args, clangcmd = parser.parse_known_args()
 
     if not os.path.isfile(args.srcfile):
-        parser.error(f"specified source file doesn't exist:\n{args.srcfile}")
+        parser.error(f"specified source file doesn't exist:\n{args.srcfile}\n")
 
     if not os.path.isfile(args.destfile):
-        parser.error(f"specified destination file doesn't exist:\n{args.destfile}")
+        parser.error(f"specified destination file doesn't exist:\n{args.destfile}\n")
 
     clangcmd_src = clangcmd.copy()
     clangcmd_dest = clangcmd.copy()
@@ -219,11 +219,11 @@ def main():
     index = Index.create()
     tu_src = index.parse(None, clangcmd_src)
     if not tu_src:
-        parser.error(f"clang unable to load source file:\n{args.srcfile}")
+        parser.error(f"clang unable to load source file:\n{args.srcfile}\n")
 
     tu_dest = index.parse(None, clangcmd_dest)
     if not tu_dest:
-        parser.error(f"clang unable to load destination file:\n{args.destfile}")
+        parser.error(f"clang unable to load destination file:\n{args.destfile}\n")
 
     # print information about unknown files/functions/methods
     pprint(('diagnostics in SOURCE:', [get_diag_info(d) for d in tu_src.diagnostics]))
@@ -233,13 +233,13 @@ def main():
     find_method_def_nodes(tu_src.cursor, method_def_nodes_src, args.srcfile)
     if not method_def_nodes_src:
         parser.error(f"unable to find any method definition in source file:\n{args.srcfile}\n" +
-                      f"probably you forgot to pass `-std=c++03` (or higher) flag?")
+                      f"probably you forgot to pass `-std=c++03` (or higher) flag?\n")
 
     method_def_nodes_dest = []
     find_method_def_nodes(tu_dest.cursor, method_def_nodes_dest, args.destfile)
     if not method_def_nodes_dest:
         parser.error(f"unable to find any function/method definition in destination file:\n{args.destfile}" +
-                      f"\nprobably you forgot to pass `-std=c++3` (or higher) flag?")
+                      f"\nprobably you forgot to pass `-std=c++3` (or higher) flag?\n")
 
     # read source file
     with open(args.srcfile, mode='r') as file:
@@ -260,7 +260,7 @@ def main():
                         f"found destination functions/methods:\n")
             for node in method_def_nodes_dest:
                 err_msg += f"\t{node.semantic_parent.displayname}::{node.spelling}->{node.type.spelling}\n"
-            err_msg += f"also check is it definition? static? virtual? const?"
+            err_msg += f"also check is it definition? static? virtual? const?\n"
             parser.error(err_msg)
 
         idx = dest_lines.index(node_dest.extent.start.line)
