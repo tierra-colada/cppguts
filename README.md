@@ -9,9 +9,16 @@ There are two tools:
 
 We will discuss `editcpp` as it is the objective tool.
 
+**`editcpp` doesn't work with templates.**
+
 Same tool aimed at editing `python` files is also available as [pythonguts](https://github.com/tierra-colada/pythonguts)
 
-**`editcpp` doesn't work with templates.**
+## Installation
+`cppguts` is available at [PyPI](https://pypi.org/project/cppguts/):
+
+```bash
+pip install cppguts
+```
 
 ## The idea behind `editcpp` tool
 `editcpp` uses `libclang` to find function/method definition start/end lines in text file (`.c`, `.h`, `.hpp`, `.cpp` or whatever C/C++ extension). `libclang` parses each `dest.cpp` and `src.cpp` and everything that is
