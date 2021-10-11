@@ -226,8 +226,8 @@ def main():
         parser.error(f"clang unable to load destination file:\n{args.destfile}\n")
 
     # print information about unknown files/functions/methods
-    pprint(('diagnostics in SOURCE:', [get_diag_info(d) for d in tu_src.diagnostics]))
-    pprint(('diagnostics in DESTINATION:', [get_diag_info(d) for d in tu_dest.diagnostics]))
+    pprint(('diagnostics in SOURCE:\t'+args.srcfile, [get_diag_info(d) for d in tu_src.diagnostics]))
+    pprint(('diagnostics in DESTINATION:\t'+args.destfile, [get_diag_info(d) for d in tu_dest.diagnostics]))
 
     method_def_nodes_src = []
     find_method_def_nodes(tu_src.cursor, method_def_nodes_src, args.srcfile)

@@ -121,7 +121,7 @@ def main():
     index = Index.create()
     tu = index.parse(None, clangcmd)
     if not tu:
-        parser.error("unable to load input")
+        parser.error(f"unable to load input:\n{args.file}")
 
     pprint(('diagnostics:', [get_diag_info(d) for d in tu.diagnostics]))
     if args.objname:
