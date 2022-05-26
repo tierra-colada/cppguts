@@ -11,7 +11,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     url='https://github.com/tierra-colada/cppguts',
     license='MIT',
-    author='kerim khemrev',
+    author='kerim khemraev',
     author_email='tierracolada@gmail.com',
     description='Tool aimed at C/C++ source code correction that allows to '
                 'automatically find and copy/paste new function definition',
